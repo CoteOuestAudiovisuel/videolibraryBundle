@@ -126,54 +126,56 @@ class CoaVideolibraryService
         // fin de gestion stokage local
 
         // synchronisation depuis bucket s3
-        $s3Client = $this->s3Service->buildClient();
-        $prefixSrc = $_ENV["S3_DYNAMIC_STORAGE_BUCKET_APP"] . "/coa_videolibrary_ftp";
-        $prefixDest = $_ENV["S3_DYNAMIC_STORAGE_BUCKET_APP"] . "/coa_videolibrary_upload";
-        $bucket = $_ENV["S3_DYNAMIC_STORAGE_BUCKET"];
+        if(isset($_ENV["S3_DYNAMIC_STORAGE_BUCKET_APP"]) && isset($_ENV["S3_DYNAMIC_STORAGE_BUCKET"])){
+            $s3Client = $this->s3Service->buildClient();
+            $prefixSrc = $_ENV["S3_DYNAMIC_STORAGE_BUCKET_APP"] . "/coa_videolibrary_ftp";
+            $prefixDest = $_ENV["S3_DYNAMIC_STORAGE_BUCKET_APP"] . "/coa_videolibrary_upload";
+            $bucket = $_ENV["S3_DYNAMIC_STORAGE_BUCKET"];
 
-        $result = $s3Client->listObjects([
-            'Bucket' => $bucket,
-            'Delimiter' => '/',
-            'Prefix' => $prefixSrc."/",
-        ]);
-
-        array_shift($result['Contents']);
-
-        foreach ($result['Contents'] as $el) {
-            $filename = $el["Key"];
-            $file_length = $el["Size"];
-            $basename =  basename($filename);
-            $code = substr(trim(base64_encode(bin2hex(openssl_random_pseudo_bytes(32,$ok))),"="),0,32);
-            $newFilename = $prefixDest . "/" . $code . ".mp4";
-            $usefor = "episode";
-            $encrypted = true;
-
-            if(preg_match("#(film|episode|clip)_(.+)#i",$basename,$m)){
-                $usefor = strtolower($m[1]);
-                $basename = $m[2];
-                if($usefor == "clip"){
-                    $encrypted = false;
-                }
-            }
-
-            $s3Client->copyObject([
-                "Bucket"=>$bucket,
-                "CopySource"=>"/".$bucket."/".$filename,
-                "Key"=>$newFilename,
+            $result = $s3Client->listObjects([
+                'Bucket' => $bucket,
+                'Delimiter' => '/',
+                'Prefix' => $prefixSrc."/",
             ]);
-            $this->s3Service->deleteObject($bucket,$filename);
 
-            $video = new $video_entity();
-            $video->setCode($code);
-            $video->setOriginalFilename($basename);
-            $video->setFileSize($file_length);
-            $video->setState("pending");
-            $video->setIsTranscoded(false);
-            $video->setEncrypted($encrypted);
-            $video->setUseFor($usefor);
-            $video->setCreatedAt(new \DateTimeImmutable());
-            $this->em->persist($video);
-            $this->em->flush();
+            array_shift($result['Contents']);
+
+            foreach ($result['Contents'] as $el) {
+                $filename = $el["Key"];
+                $file_length = $el["Size"];
+                $basename =  basename($filename);
+                $code = substr(trim(base64_encode(bin2hex(openssl_random_pseudo_bytes(32,$ok))),"="),0,32);
+                $newFilename = $prefixDest . "/" . $code . ".mp4";
+                $usefor = "episode";
+                $encrypted = true;
+
+                if(preg_match("#(film|episode|clip)_(.+)#i",$basename,$m)){
+                    $usefor = strtolower($m[1]);
+                    $basename = $m[2];
+                    if($usefor == "clip"){
+                        $encrypted = false;
+                    }
+                }
+
+                $s3Client->copyObject([
+                    "Bucket"=>$bucket,
+                    "CopySource"=>"/".$bucket."/".$filename,
+                    "Key"=>$newFilename,
+                ]);
+                $this->s3Service->deleteObject($bucket,$filename);
+
+                $video = new $video_entity();
+                $video->setCode($code);
+                $video->setOriginalFilename($basename);
+                $video->setFileSize($file_length);
+                $video->setState("pending");
+                $video->setIsTranscoded(false);
+                $video->setEncrypted($encrypted);
+                $video->setUseFor($usefor);
+                $video->setCreatedAt(new \DateTimeImmutable());
+                $this->em->persist($video);
+                $this->em->flush();
+            }
         }
         // fin de synchronisation depuis bucket s3
     }
