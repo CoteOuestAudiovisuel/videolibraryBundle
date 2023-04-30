@@ -1,11 +1,16 @@
 <?php
 namespace Coa\VideolibraryBundle\DependencyInjection;
 
+use Coa\VideolibraryBundle\Event\AesKeyEvent;
+use Coa\VideolibraryBundle\Event\InputFileEvent;
+use Coa\VideolibraryBundle\Event\TranscodingEvent;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\EventDispatcher\DependencyInjection\AddEventAliasesPass;
+
 
 /**
  * VideolibraryExtension
@@ -104,5 +109,11 @@ class CoaVideolibraryExtension extends Extension implements PrependExtensionInte
         $twigConfig['paths'][__DIR__.'/../Resources/views'] = "coa_videolibrary";
         $twigConfig['paths'][__DIR__.'/../Resources/public'] = "coa_videolibrary.public";
         $container->prependExtensionConfig('twig', $twigConfig);
+
+        $container->addCompilerPass(new AddEventAliasesPass([
+            AesKeyEvent::class => 'coa_videolibrary.aeskey',
+            InputFileEvent::class => 'coa_videolibrary.inputfile',
+            TranscodingEvent::class => 'coa_videolibrary.transcoding',
+        ]));
     }
 }

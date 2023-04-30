@@ -1,10 +1,12 @@
 <?php
 namespace Coa\VideolibraryBundle\Service;
 use Coa\VideolibraryBundle\Entity\Video;
+use Coa\VideolibraryBundle\Event\TranscodingEvent;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\AcceptHeader;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -21,11 +23,12 @@ class CoaVideolibraryService
     private RequestStack $requestStack;
     private HttpClientInterface $httpClient;
     private Environment $twig;
+    private EventDispatcherInterface $dispatcher;
 
     public function __construct(ContainerBagInterface $container,
                                 EntityManagerInterface $em, MediaConvertService $mediaConvert,
                                 S3Service $s3Service,Packages $packages, RequestStack $requestStack,
-                                HttpClientInterface $httpClient, Environment $twig){
+                                HttpClientInterface $httpClient, Environment $twig, EventDispatcherInterface $dispatcher){
         $this->container = $container;
         $this->em = $em;
         $this->mediaConvert = $mediaConvert;
@@ -37,6 +40,7 @@ class CoaVideolibraryService
             'verify_host' => false
         ]);
         $this->twig = $twig;
+        $this->dispatcher = $dispatcher;
     }
 
     public function transcode(Video $video,string $video_baseurl, string $hls_key_baseurl){
@@ -45,7 +49,7 @@ class CoaVideolibraryService
         $code = $video->getCode();
         $withEncryption = $video->getEncrypted();
         $input_path = $videosPath."/".$code.'.mp4';
-        if(!file_exists($input_path)) return;
+        //if(!file_exists($input_path)) return;
 
         $inputfile = $video_baseurl.'/coa_videolibrary_upload/'.$code.'.mp4';
         $keyfilename = $code;
@@ -75,6 +79,9 @@ class CoaVideolibraryService
     public function FtpSync(){
         $video_entity = $this->container->get('coa_videolibrary.video_entity');
         $rep = $this->em->getRepository($video_entity);
+
+
+        // gestion stockage local
         $ftpPath = $this->container->get('kernel.project_dir') . "/coa_videolibrary_ftp";
         $destPath = $this->container->get('kernel.project_dir') . "/public/coa_videolibrary_upload";
 
@@ -116,6 +123,61 @@ class CoaVideolibraryService
             $this->em->flush();
             rename($filename, $newFilename);
         }
+        // fin de gestion stokage local
+
+        // synchronisation depuis bucket s3
+        if(isset($_ENV["S3_DYNAMIC_STORAGE_BUCKET_APP"]) && isset($_ENV["S3_DYNAMIC_STORAGE_BUCKET"])){
+            $s3Client = $this->s3Service->buildClient();
+            $prefixSrc = $_ENV["S3_DYNAMIC_STORAGE_BUCKET_APP"] . "/coa_videolibrary_ftp";
+            $prefixDest = $_ENV["S3_DYNAMIC_STORAGE_BUCKET_APP"] . "/coa_videolibrary_upload";
+            $bucket = $_ENV["S3_DYNAMIC_STORAGE_BUCKET"];
+
+            $result = $s3Client->listObjects([
+                'Bucket' => $bucket,
+                'Delimiter' => '/',
+                'Prefix' => $prefixSrc."/",
+            ]);
+
+            array_shift($result['Contents']);
+
+            foreach ($result['Contents'] as $el) {
+                $filename = $el["Key"];
+                $file_length = $el["Size"];
+                $basename =  basename($filename);
+                $code = substr(trim(base64_encode(bin2hex(openssl_random_pseudo_bytes(32,$ok))),"="),0,32);
+                $newFilename = $prefixDest . "/" . $code . ".mp4";
+                $usefor = "episode";
+                $encrypted = true;
+
+                if(preg_match("#(film|episode|clip)_(.+)#i",$basename,$m)){
+                    $usefor = strtolower($m[1]);
+                    $basename = $m[2];
+                    if($usefor == "clip"){
+                        $encrypted = false;
+                    }
+                }
+
+                $s3Client->copyObject([
+                    "Bucket"=>$bucket,
+                    "CopySource"=>"/".$bucket."/".$filename,
+                    "Key"=>$newFilename,
+                ]);
+                $this->s3Service->deleteObject($bucket,$filename);
+
+                $video = new $video_entity();
+                $video->setCode($code);
+                $video->setOriginalFilename($basename);
+                $video->setFileSize($file_length);
+                $video->setState("pending");
+                $video->setIsTranscoded(false);
+                $video->setEncrypted($encrypted);
+                $video->setUseFor($usefor);
+                $video->setCreatedAt(new \DateTimeImmutable());
+                $this->em->persist($video);
+                $this->em->flush();
+            }
+        }
+        // fin de synchronisation depuis bucket s3
     }
 
     /**
@@ -200,6 +262,10 @@ class CoaVideolibraryService
                     if(file_exists($filename)){
                         @unlink($filename);
                     }
+
+                    // new: event "coa_videolibrary.transcoding" is emitted
+                    $event = new TranscodingEvent($video);
+                    $this->dispatcher->dispatch($event,"coa_videolibrary.transcoding");
                 }
                 $job["html"] = $this->twig->render("@CoaVideolibrary/home/item-render.html.twig",["videos"=>[$video]]);
             }

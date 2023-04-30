@@ -74,15 +74,16 @@ class S3Service
         return $buckets;
     }
 
-    public function getObjet(string $bucket, string $key){
+    public function getObject(string $bucket, string $key){
         $client = $this->buildClient();
         $result = [];
         try {
             $result = $client->getObject(array(
                 'Bucket' => $bucket,
                 'Key' => $key,
-                'SaveAs' => $key
+                //'SaveAs' => $key
             ));
+
         } catch (S3Exception $e) {
             $result["error"] = $e->getMessage();
         }
@@ -153,4 +154,52 @@ class S3Service
 
         return $objects;
     }
+
+    /**
+     * @param string $bucket
+     * @param string $key
+     * @param string $sourceFilePath
+     * @return array|\Aws\Result
+     *
+     * Permet d'ajouter un objet dans un bucket à partir d'un fichier source
+     */
+    public function putObjectWithSourceFile(string $bucket, string $key, string $sourceFilePath){
+        $result = [];
+        try {
+            $client = $this->buildClient();
+            $result = $client->putObject([
+                "Bucket"=>$bucket,
+                "Key"=>$key,
+                "SourceFile"=> $sourceFilePath,
+            ]);
+        } catch (S3Exception $e) {
+            $result["error"] = $e->getMessage();
+        }
+        return $result;
+    }
+
+    /**
+     * @param string $bucket
+     * @param string $key
+     * @param string $data
+     * @return array
+     *
+     * Permet d'ajouter un objet dans un bucket à partir de données brutes
+     */
+    public function putObjectWithRawData(string $bucket, string $key, string $data){
+        $result = [];
+        try {
+            $client = $this->buildClient();
+            $result = $client->putObject([
+                "Bucket"=>$bucket,
+                "Key"=>$key,
+                "Body"=> $data,
+            ]);
+        } catch (S3Exception $e) {
+            $result["error"] = $e->getMessage();
+        }
+        return $result;
+    }
+
+
 }
