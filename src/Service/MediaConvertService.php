@@ -1,20 +1,24 @@
 <?php
 namespace Coa\VideolibraryBundle\Service;
+use Coa\VideolibraryBundle\Event\AesKeyEvent;
+use Coa\VideolibraryBundle\Event\InputFileEvent;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 
 use Aws\MediaConvert\MediaConvertClient;
 use Aws\Exception\AwsException;
 use Aws\Result;
 use Aws\S3\S3Client;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class MediaConvertService
 {
     private static MediaConvertClient $client;
     private ContainerBagInterface $container;
     private S3Service $s3Service;
+    private EventDispatcherInterface $dispatcher;
 
 
-    public function __construct(ContainerBagInterface $container,S3Service $s3Service){
+    public function __construct(ContainerBagInterface $container,S3Service $s3Service, EventDispatcherInterface $dispatcher){
         $this->container = $container;
 
         $env = getenv();
@@ -26,6 +30,7 @@ class MediaConvertService
             putenv(sprintf("%s=%s","AWS_SECRET_ACCESS_KEY",$container->get("coa_videolibrary.aws_secret_access_key")));
         }
         $this->s3Service = $s3Service;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -206,6 +211,7 @@ class MediaConvertService
 
         $result = ["status"=>false];
 
+
         try {
             $client = $this->buildClient();
             $payload = file_get_contents(__DIR__ . '/../Resources/views/job.json');
@@ -214,6 +220,11 @@ class MediaConvertService
             $timecodes = [20,30,45,50,60,90];
             $timecode = $timecodes[random_int(0,count($timecodes)-1)];
             $outputfile = "s3://$bucket/$keyfilename/manifest";
+
+            // new: event "coa_videolibrary.inputfile" is emitted
+            $event = new InputFileEvent($inputfile, $keyfilename, $bucket);
+            $this->dispatcher->dispatch($event,"coa_videolibrary.inputfile");
+            $inputfile = $event->getAwsInputUrl();
 
             // lorsque l'encription est activé
             if($withEncryption) {
@@ -228,6 +239,10 @@ class MediaConvertService
                 $payload = str_replace("__KEYVAL__", bin2hex($keyval), $payload);
                 $payload = str_replace("__KEYURL__", $keyurl, $payload);
                 $payload = str_replace("__IV__", bin2hex($iv), $payload);
+
+                // new: event "coa_videolibrary.aeskey" is emitted
+                $event = new AesKeyEvent($keyfilename,$keyval);
+                $this->dispatcher->dispatch($event,"coa_videolibrary.aeskey");
             }
 
             $payload = str_replace("__SCREENSHOT_TC__",$timecode,$payload);
