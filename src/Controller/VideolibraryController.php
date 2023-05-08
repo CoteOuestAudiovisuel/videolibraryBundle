@@ -326,7 +326,11 @@ class VideolibraryController extends AbstractController
             $code = $video->getCode();
             $chunk = $file->getContent();
             $filepath = sprintf($targetDirectory . "/%s.mp4", $code);
-            file_put_contents($filepath, $chunk, FILE_APPEND);
+
+            # on stock le fichier en local uniquement lorsque les stockage distant est desactivé
+            if(!filter_var(@$_ENV['FOREIGN_DYNAMIC_STORAGE'], FILTER_VALIDATE_BOOLEAN)){
+                file_put_contents($filepath, $chunk, FILE_APPEND);
+            }
 
             $video->setFileSize($video->getFileSize() + $file_length);
             $video->setEncrypted($encrypted);
@@ -386,7 +390,11 @@ class VideolibraryController extends AbstractController
 
             $chunk = $file->getContent();
             $filepath = sprintf($targetDirectory . "/%s.mp4", $code);
-            file_put_contents($filepath, $chunk, FILE_APPEND);
+
+            # on stock le fichier en local uniquement lorsque les stockage distant est desactivé
+            if(!filter_var(@$_ENV['FOREIGN_DYNAMIC_STORAGE'], FILTER_VALIDATE_BOOLEAN)){
+                file_put_contents($filepath, $chunk, FILE_APPEND);
+            }
 
             $video = new $video_entity();
             $video->setCode($code);
