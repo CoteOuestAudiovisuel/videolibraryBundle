@@ -3,6 +3,7 @@
 namespace Coa\VideolibraryBundle\Controller;
 
 use Coa\VideolibraryBundle\Entity\Video;
+use Coa\VideolibraryBundle\Event\MultipartUploadEvent;
 use Coa\VideolibraryBundle\Extensions\Twig\AwsS3Url;
 use Coa\VideolibraryBundle\Service\CoaVideolibraryService;
 use Coa\VideolibraryBundle\Service\MediaConvertService;
@@ -12,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Asset\Packages;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\AcceptHeader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -285,7 +287,7 @@ class VideolibraryController extends AbstractController
      * @IsGranted("ROLE_VIDEOLIBRARY_UPLOAD")
      */
     public function upload(Request $request, MediaConvertService $mediaConvert,
-                           Packages $packages, CoaVideolibraryService $coaVideolibrary): Response
+                           Packages $packages, CoaVideolibraryService $coaVideolibrary, EventDispatcherInterface $dispatcher): Response
     {
         $em = $this->getDoctrine()->getManager();
         $video_entity = $this->getParameter("coa_videolibrary.video_entity");
@@ -325,10 +327,10 @@ class VideolibraryController extends AbstractController
             $chunk = $file->getContent();
             $filepath = sprintf($targetDirectory . "/%s.mp4", $code);
             file_put_contents($filepath, $chunk, FILE_APPEND);
+
             $video->setFileSize($video->getFileSize() + $file_length);
             $video->setEncrypted($encrypted);
             $video->setUseFor($usefor);
-
 
             if($is_end) {
                 $video->setState("pending");
@@ -337,7 +339,16 @@ class VideolibraryController extends AbstractController
             $result["video_id"] = $video->getCode();
             $result["status"] = "downloading";
 
+            // new: event "coa_videolibrary.upload" is emitted
+            $event = new MultipartUploadEvent($video,$chunk,$total_size, $chunk_range_start, $chunk_range_end);
+            $dispatcher->dispatch($event,"coa_videolibrary.multipartupload");
+
             if ($is_end) {
+
+                // new: event "coa_videolibrary.upload" is emitted
+                $event = new MultipartUploadEvent($video,null,$total_size, $chunk_range_start, $chunk_range_end);
+                $dispatcher->dispatch($event,"coa_videolibrary.multipartupload");
+
                 $result['status'] = "success";
                 $key_baseurl = $this->getParameter("coa_videolibrary.hls_key_baseurl");
                 $baseurl = $request->getSchemeAndHttpHost();
@@ -357,6 +368,7 @@ class VideolibraryController extends AbstractController
                 $result["html"] = $this->renderView("@CoaVideolibrary/home/item-render.html.twig",["videos"=>[$video]]);
             }
 
+
             $em->persist($video);
             $em->flush();
         }
@@ -375,8 +387,6 @@ class VideolibraryController extends AbstractController
             $chunk = $file->getContent();
             $filepath = sprintf($targetDirectory . "/%s.mp4", $code);
             file_put_contents($filepath, $chunk, FILE_APPEND);
-
-
 
             $video = new $video_entity();
             $video->setCode($code);
@@ -398,6 +408,10 @@ class VideolibraryController extends AbstractController
             $em->flush();
             $result["video_id"] = $video->getCode();
             $result['status'] = "start";
+
+            // new: event "coa_videolibrary.upload" is emitted
+            $event = new MultipartUploadEvent($video, $chunk, $total_size, $chunk_range_start, $chunk_range_end);
+            $dispatcher->dispatch($event,"coa_videolibrary.multipartupload");
         }
         return $this->json($result);
     }

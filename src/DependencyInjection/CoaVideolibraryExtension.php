@@ -4,6 +4,7 @@ namespace Coa\VideolibraryBundle\DependencyInjection;
 use Coa\VideolibraryBundle\Event\AesKeyEvent;
 use Coa\VideolibraryBundle\Event\InputFileEvent;
 use Coa\VideolibraryBundle\Event\TranscodingEvent;
+use Coa\VideolibraryBundle\Event\MultipartUploadEvent;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -114,6 +115,7 @@ class CoaVideolibraryExtension extends Extension implements PrependExtensionInte
             AesKeyEvent::class => 'coa_videolibrary.aeskey',
             InputFileEvent::class => 'coa_videolibrary.inputfile',
             TranscodingEvent::class => 'coa_videolibrary.transcoding',
+            MultipartUploadEvent::class => 'coa_videolibrary.multipartupload',
         ]));
     }
 }
