@@ -138,8 +138,7 @@ Aaz.VideoLibrary = (function(nsp){
         let progress_bar = obj.find(".progress-bar");
         obj.removeClass("pending").addClass("uploading");
 
-
-        const chunkSize = 2097152;
+        const chunkSize = 5242880; // 5Mo
         let chunkCounter = 0;
         let video_id  = "";
         let start = 0;
