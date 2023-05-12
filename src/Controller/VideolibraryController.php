@@ -368,7 +368,7 @@ class VideolibraryController extends AbstractController
                     $baseurl = $request->getSchemeAndHttpHost();
                 }
 
-                $coaVideolibrary->transcode($video,$baseurl,$key_baseurl);
+                //$coaVideolibrary->transcode($video,$baseurl,$key_baseurl);
                 $result["html"] = $this->renderView("@CoaVideolibrary/home/item-render.html.twig",["videos"=>[$video]]);
             }
 

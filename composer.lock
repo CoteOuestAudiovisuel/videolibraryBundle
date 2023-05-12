@@ -161,12 +161,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/CoteOuestAudiovisuel/MessengerBundle.git",
-                "reference": "35d25f04aad9b239097d8e579e4f1c2e8d6e5cb4"
+                "reference": "380b41e8cfdb1ab590fc9bd7c9f7ad12a4af4dc5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CoteOuestAudiovisuel/MessengerBundle/zipball/35d25f04aad9b239097d8e579e4f1c2e8d6e5cb4",
-                "reference": "35d25f04aad9b239097d8e579e4f1c2e8d6e5cb4",
+                "url": "https://api.github.com/repos/CoteOuestAudiovisuel/MessengerBundle/zipball/380b41e8cfdb1ab590fc9bd7c9f7ad12a4af4dc5",
+                "reference": "380b41e8cfdb1ab590fc9bd7c9f7ad12a4af4dc5",
                 "shasum": ""
             },
             "require": {
@@ -204,7 +204,7 @@
                 "issues": "https://github.com/CoteOuestAudiovisuel/MessengerBundle/issues",
                 "source": "https://github.com/CoteOuestAudiovisuel/MessengerBundle/tree/aws"
             },
-            "time": "2023-05-12T12:57:51+00:00"
+            "time": "2023-05-12T17:37:23+00:00"
         },
         {
             "name": "doctrine/annotations",
