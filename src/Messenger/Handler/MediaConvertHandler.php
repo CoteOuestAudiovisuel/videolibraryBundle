@@ -60,7 +60,6 @@ class MediaConvertHandler extends Handler {
         $originalFilename = $payload["originalFilename"];
         $region = $payload["region"];
         $source_key = $payload["source_key"];
-        $source_bucket = $payload["source_bucket"];
 
 
         /** @var Video $video */
@@ -158,6 +157,7 @@ class MediaConvertHandler extends Handler {
 
                 if(in_array($job["status"],["COMPLETE","ERROR","CANCELED"])){
                     // new: event "coa_videolibrary.transcoding" is emitted
+                    list($source_bucket,$source_key) = explode(":",$source_key);
                     $this->s3->deleteObject($source_bucket,$source_key);
 
                     $event = new TranscodingEvent($video);
