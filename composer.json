@@ -22,7 +22,8 @@
         "ext-json": "*",
         "ext-openssl": "*",
         "symfony/http-client": "5.4.*",
-        "symfony/form": "5.4.x-dev"
+        "symfony/form": "5.4.x-dev",
+        "coa/messenger-bundle": "dev-aws"
     },
     "license": "proprietary",
     "autoload": {
