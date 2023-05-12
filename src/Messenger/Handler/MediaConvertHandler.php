@@ -50,64 +50,53 @@ class MediaConvertHandler extends Handler {
         $video_entity = $this->container->get("coa_videolibrary.video_entity");
         $rep = $this->em->getRepository($video_entity);
 
+        $code = $payload["code"];
+        $jobId = $payload["jobId"];
+        $fileSize = $payload["fileSize"];
+        $bucket = $payload["bucket"];
+        $originalFilename = $payload["originalFilename"];
+        $region = $payload["region"];
+
+        /** @var Video $video */
+        if(!($video = $rep->findOneBy(["code"=>$payload["code"]]))) {
+            $video = new $video_entity();
+            $video->setCode($code);
+            $video->setOriginalFilename($originalFilename);
+            $video->setFileSize($fileSize);
+            $video->setState("SUBMITTED");
+            $video->setJobRef($jobId);
+            $video->setIsTranscoded(false);
+            $video->setPoster(null);
+            $video->setScreenshots(null);
+            $video->setWebvtt(null);
+            $video->setManifest(null);
+            $video->setDuration(null);
+            $video->setCreatedAt(new \DateTimeImmutable());
+            $video->setAuthor(null);
+            $video->setEncrypted(true);
+            $video->setUseFor("episode");
+            $this->em->persist($video);
+            $video->setBucket($bucket);
+            $video->setRegion($region);
+            $video->setJobPercent(0);
+            $this->em->persist($video);
+            $this->em->flush();
+        }
+
         switch ($bindingKey){
             // video soumise en transcodage avec disponibilité
             // il faut creer l'entité video
             case "mc.transcoding.submitted":
 
-                /** @var Video $video */
-                if(($video = $rep->findOneBy(["code"=>$payload["code"]]))) {
-                    return;
-                }
-
-                $code = $payload["code"];
-                $jobId = $payload["jobId"];
-                $fileSize = $payload["fileSize"];
-                $bucket = $payload["bucket"];
-                $originalFilename = $payload["originalFilename"];
-                $region = $payload["region"];
-
-                $video = new $video_entity();
-                $video->setCode($code);
-                $video->setOriginalFilename($originalFilename);
-                $video->setFileSize($fileSize);
-                $video->setState("SUBMITTED");
-                $video->setJobRef($jobId);
-                $video->setIsTranscoded(false);
-                $video->setPoster(null);
-                $video->setScreenshots(null);
-                $video->setWebvtt(null);
-                $video->setManifest(null);
-                $video->setDuration(null);
-                $video->setCreatedAt(new \DateTimeImmutable());
-                $video->setAuthor(null);
-                $video->setEncrypted(true);
-                $video->setUseFor("episode");
-                $this->em->persist($video);
-                $video->setBucket($bucket);
-                $video->setRegion($region);
-                $video->setJobPercent(0);
-                $this->em->persist($video);
-                $this->em->flush();
                 break;
 
             case "mc.transcoding.error": // status d'un transcodage
-                /** @var Video $video */
-                if(!($video = $rep->findOneBy(["code"=>$payload["code"]]))) {
-                    return;
-                }
-
                 $video->setState("ERROR");
                 $this->em->persist($video);
                 $this->em->flush();
                 break;
 
             case "mc.transcoding.progressing": // status d'un transcodage
-                /** @var Video $video */
-                if(!($video = $rep->findOneBy(["code"=>$payload["code"]]))) {
-                    return;
-                }
-
                 $video->setState("PROGRESSING");
                 if(isset($payload["jobPercent"])){
                     $video->setJobPercent($payload["jobPercent"]);
@@ -117,10 +106,6 @@ class MediaConvertHandler extends Handler {
                 break;
 
             case "mc.transcoding.complete": // status d'un transcodage
-                /** @var Video $video */
-                if(!($video = $rep->findOneBy(["code"=>$payload["code"]]))) {
-                    return;
-                }
 
                 $video->setIsTranscoded(true);
                 $video->setJobPercent(100);
