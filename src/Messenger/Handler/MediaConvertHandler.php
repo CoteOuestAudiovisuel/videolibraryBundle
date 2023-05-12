@@ -5,6 +5,7 @@ use Coa\MessengerBundle\Messenger\Handler\Handler;
 use Coa\VideolibraryBundle\Entity\Video;
 use Coa\VideolibraryBundle\Event\TranscodingEvent;
 use Coa\VideolibraryBundle\Service\MediaConvertService;
+use Coa\VideolibraryBundle\Service\S3Service;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -28,17 +29,19 @@ class MediaConvertHandler extends Handler {
     private EntityManagerInterface $em;
     private MediaConvertService $mediaConvert;
     private EventDispatcherInterface $dispatcher;
+    private S3Service $s3;
 
     /**
      * @param ContainerBagInterface $container
      */
     public function __construct(ContainerBagInterface $container,
-                                EntityManagerInterface $em, MediaConvertService $mediaConvert, EventDispatcherInterface $dispatcher){
+                                EntityManagerInterface $em, MediaConvertService $mediaConvert, EventDispatcherInterface $dispatcher, S3Service $s3){
         parent::__construct("mc\..+",1);
         $this->container = $container;
         $this->em = $em;
         $this->mediaConvert = $mediaConvert;
         $this->dispatcher = $dispatcher;
+        $this->s3 = $s3;
     }
 
     /**
@@ -56,6 +59,9 @@ class MediaConvertHandler extends Handler {
         $bucket = $payload["bucket"];
         $originalFilename = $payload["originalFilename"];
         $region = $payload["region"];
+        $source_key = $payload["source_key"];
+        $source_bucket = $payload["source_bucket"];
+
 
         /** @var Video $video */
         if(!($video = $rep->findOneBy(["code"=>$payload["code"]]))) {
@@ -152,6 +158,8 @@ class MediaConvertHandler extends Handler {
 
                 if(in_array($job["status"],["COMPLETE","ERROR","CANCELED"])){
                     // new: event "coa_videolibrary.transcoding" is emitted
+                    $this->s3->deleteObject($source_bucket,$source_key);
+
                     $event = new TranscodingEvent($video);
                     $this->dispatcher->dispatch($event,"coa_videolibrary.transcoding");
                 }
