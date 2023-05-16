@@ -26,7 +26,9 @@
         "symfony/security-bundle": "5.4.x-dev",
         "symfony/messenger": "5.4.x-dev",
         "coa/messenger-bundle": "dev-aws",
-        "symfony/validator": "5.4.x-dev"
+        "symfony/validator": "5.4.x-dev",
+        "lexik/jwt-authentication-bundle": "2.x-dev",
+        "symfony/console": "5.4.x-dev"
     },
     "license": "proprietary",
     "autoload": {

@@ -26,10 +26,9 @@ use function Doctrine\ORM\QueryBuilder;
  * @Route("/videolibrary", name="coa_videolibrary_")
  * @IsGranted("ROLE_MANAGER")
  * Class VideolibraryController
- * @package App\Controller
+ * @package Coa\VideolibraryBundle\Controller
  */
-class VideolibraryController extends AbstractController
-{
+class VideolibraryController extends AbstractController {
 
     private function getVideo(string $code){
         $entity_class = $this->getParameter("coa_videolibrary.video_entity");
