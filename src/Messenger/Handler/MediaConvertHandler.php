@@ -94,72 +94,79 @@ class MediaConvertHandler extends Handler {
                 break;
 
             case "mc.transcoding.error": // status d'un transcodage
-                $video->setState("ERROR");
-                $this->em->persist($video);
-                $this->em->flush();
+                if(!in_array($video->getState(),["COMPLETE","ERROR","CANCELED"])){
+                    $video->setState("ERROR");
+                    $this->em->persist($video);
+                    $this->em->flush();
+                }
                 break;
 
             case "mc.transcoding.progressing": // status d'un transcodage
-                $video->setState("PROGRESSING");
-                if(isset($payload["jobPercent"])){
-                    $video->setJobPercent($payload["jobPercent"]);
+                if(!in_array($video->getState(),["COMPLETE","ERROR","CANCELED"])){
+
+                    $video->setState("PROGRESSING");
+                    if(isset($payload["jobPercent"])){
+                        $video->setJobPercent($payload["jobPercent"]);
+                    }
+                    $this->em->persist($video);
+                    $this->em->flush();
                 }
-                $this->em->persist($video);
-                $this->em->flush();
                 break;
 
             case "mc.transcoding.complete": // status d'un transcodage
+                if(!in_array($video->getState(),["COMPLETE","ERROR","CANCELED"])){
 
-                $video->setIsTranscoded(true);
-                $video->setJobPercent(100);
+                    $video->setIsTranscoded(true);
+                    $video->setJobPercent(100);
 
-                $r = $this->mediaConvert->getJob($video->getJobRef());
-                if(!$r["status"]) break;
+                    $r = $this->mediaConvert->getJob($video->getJobRef());
+                    if(!$r["status"]) break;
 
-                $job = @$r["data"];
-                $video->setState($job["status"]);
-                $video->setDuration($job["duration"]);
+                    $job = @$r["data"];
+                    $video->setState($job["status"]);
+                    $video->setDuration($job["duration"]);
 
-                if (isset($job["startTime"]) && $job["startTime"]) {
-                    $video->setjobStartTime(new \DateTimeImmutable($job["startTime"]));
-                }
-
-                if (isset($job["submitTime"]) && $job["submitTime"]) {
-                    $video->setjobSubmitTime(new \DateTimeImmutable($job["submitTime"]));
-                }
-
-                if (isset($job["finishTime"]) && $job["finishTime"]) {
-                    $video->setjobFinishTime(new \DateTimeImmutable($job["finishTime"]));
-                }
-
-                $bucket = $video->getBucket(); //@$job["bucket"];
-                $prefix = $video->getCode()."/"; //@$job["prefix"];
-                $job["resources"] = $this->mediaConvert->getResources($bucket,$prefix);
-
-                if (isset($job["resources"]) && count($job["resources"])) {
-                    #fix bug #045 not enough images on getstatus
-                    $video->setDownload(@$job["resources"]["download"][0]);
-                    $video->setPoster($job["resources"]["thumnails"][0]);
-                    $video->setScreenshots($job["resources"]["thumnails"]);
-                    # add random poster selecttion
-                    if(count(@$job["resources"]["thumnails"]) > 1){
-                        $index = random_int(1,count($job["resources"]["thumnails"])-1);
-                        $video->setPoster($job["resources"]["thumnails"][$index]);
+                    if (isset($job["startTime"]) && $job["startTime"]) {
+                        $video->setjobStartTime(new \DateTimeImmutable($job["startTime"]));
                     }
-                    $video->setWebvtt($job["resources"]["webvtt"]);
-                    $video->setManifest($job["resources"]["manifests"][0]);
-                    $video->setVariants(array_slice($job["resources"]["manifests"], 1));
-                }
-                $this->em->persist($video);
-                $this->em->flush();
 
-                if(in_array($job["status"],["COMPLETE","ERROR","CANCELED"])){
-                    // new: event "coa_videolibrary.transcoding" is emitted
-                    list($src_bucket,$src_key) = explode(":",$source_key);
-                    $this->s3->deleteObject($src_bucket,$src_key);
+                    if (isset($job["submitTime"]) && $job["submitTime"]) {
+                        $video->setjobSubmitTime(new \DateTimeImmutable($job["submitTime"]));
+                    }
 
-                    $event = new TranscodingEvent($video);
-                    $this->dispatcher->dispatch($event,"coa_videolibrary.transcoding");
+                    if (isset($job["finishTime"]) && $job["finishTime"]) {
+                        $video->setjobFinishTime(new \DateTimeImmutable($job["finishTime"]));
+                    }
+
+                    $bucket = $video->getBucket(); //@$job["bucket"];
+                    $prefix = $video->getCode()."/"; //@$job["prefix"];
+                    $job["resources"] = $this->mediaConvert->getResources($bucket,$prefix);
+
+                    if (isset($job["resources"]) && count($job["resources"])) {
+                        #fix bug #045 not enough images on getstatus
+                        $video->setDownload(@$job["resources"]["download"][0]);
+                        $video->setPoster($job["resources"]["thumnails"][0]);
+                        $video->setScreenshots($job["resources"]["thumnails"]);
+                        # add random poster selecttion
+                        if(count(@$job["resources"]["thumnails"]) > 1){
+                            $index = random_int(1,count($job["resources"]["thumnails"])-1);
+                            $video->setPoster($job["resources"]["thumnails"][$index]);
+                        }
+                        $video->setWebvtt($job["resources"]["webvtt"]);
+                        $video->setManifest($job["resources"]["manifests"][0]);
+                        $video->setVariants(array_slice($job["resources"]["manifests"], 1));
+                    }
+                    $this->em->persist($video);
+                    $this->em->flush();
+
+                    if(in_array($job["status"],["COMPLETE","ERROR","CANCELED"])){
+                        // new: event "coa_videolibrary.transcoding" is emitted
+                        list($src_bucket,$src_key) = explode(":",$source_key);
+                        $this->s3->deleteObject($src_bucket,$src_key);
+
+                        $event = new TranscodingEvent($video);
+                        $this->dispatcher->dispatch($event,"coa_videolibrary.transcoding");
+                    }
                 }
                 break;
         }
