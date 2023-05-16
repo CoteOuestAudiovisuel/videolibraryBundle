@@ -49,7 +49,6 @@ class MediaConvertHandler extends Handler {
      * @return mixed
      */
     protected function run(string $bindingKey,array $payload){
-        dump("---------------------------> on rentre dans MediaConvertProgressHandler <---------------------------------");
         $video_entity = $this->container->get("coa_videolibrary.video_entity");
         $rep = $this->em->getRepository($video_entity);
 

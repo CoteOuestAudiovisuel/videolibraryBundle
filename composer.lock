@@ -62,16 +62,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.269.11",
+            "version": "3.269.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "b187de784f668f976345a9f11d5cae4af0c7be25"
+                "reference": "fb6e7d09d901757ad485e38295ea6b44acb05b15"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b187de784f668f976345a9f11d5cae4af0c7be25",
-                "reference": "b187de784f668f976345a9f11d5cae4af0c7be25",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/fb6e7d09d901757ad485e38295ea6b44acb05b15",
+                "reference": "fb6e7d09d901757ad485e38295ea6b44acb05b15",
                 "shasum": ""
             },
             "require": {
@@ -151,9 +151,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.269.11"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.269.12"
             },
-            "time": "2023-05-11T18:20:50+00:00"
+            "time": "2023-05-15T18:25:49+00:00"
         },
         {
             "name": "coa/messenger-bundle",
@@ -161,12 +161,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/CoteOuestAudiovisuel/MessengerBundle.git",
-                "reference": "380b41e8cfdb1ab590fc9bd7c9f7ad12a4af4dc5"
+                "reference": "6c2457c3a076249fa75023c4e4f8c1f2fef62942"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CoteOuestAudiovisuel/MessengerBundle/zipball/380b41e8cfdb1ab590fc9bd7c9f7ad12a4af4dc5",
-                "reference": "380b41e8cfdb1ab590fc9bd7c9f7ad12a4af4dc5",
+                "url": "https://api.github.com/repos/CoteOuestAudiovisuel/MessengerBundle/zipball/6c2457c3a076249fa75023c4e4f8c1f2fef62942",
+                "reference": "6c2457c3a076249fa75023c4e4f8c1f2fef62942",
                 "shasum": ""
             },
             "require": {
@@ -204,7 +204,7 @@
                 "issues": "https://github.com/CoteOuestAudiovisuel/MessengerBundle/issues",
                 "source": "https://github.com/CoteOuestAudiovisuel/MessengerBundle/tree/aws"
             },
-            "time": "2023-05-12T17:37:23+00:00"
+            "time": "2023-05-12T17:45:51+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -1348,12 +1348,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/orm.git",
-                "reference": "38e47fdeabb9b852770f032b9940f70f6c17a8f9"
+                "reference": "4e137f77a5dc8cf958ad57391e7eeb32ca0a72b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/orm/zipball/38e47fdeabb9b852770f032b9940f70f6c17a8f9",
-                "reference": "38e47fdeabb9b852770f032b9940f70f6c17a8f9",
+                "url": "https://api.github.com/repos/doctrine/orm/zipball/4e137f77a5dc8cf958ad57391e7eeb32ca0a72b9",
+                "reference": "4e137f77a5dc8cf958ad57391e7eeb32ca0a72b9",
                 "shasum": ""
             },
             "require": {
@@ -1441,7 +1441,7 @@
                 "issues": "https://github.com/doctrine/orm/issues",
                 "source": "https://github.com/doctrine/orm/tree/2.16.x"
             },
-            "time": "2023-05-08T13:46:54+00:00"
+            "time": "2023-05-16T06:19:42+00:00"
         },
         {
             "name": "doctrine/persistence",
@@ -1599,12 +1599,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/proxy-manager-lts.git",
-                "reference": "70d9e16c78300b125cb3801f91146241c2823819"
+                "reference": "3ca65b8edb8d96b46fedc9bb4911396516347129"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/proxy-manager-lts/zipball/70d9e16c78300b125cb3801f91146241c2823819",
-                "reference": "70d9e16c78300b125cb3801f91146241c2823819",
+                "url": "https://api.github.com/repos/FriendsOfPHP/proxy-manager-lts/zipball/3ca65b8edb8d96b46fedc9bb4911396516347129",
+                "reference": "3ca65b8edb8d96b46fedc9bb4911396516347129",
                 "shasum": ""
             },
             "require": {
@@ -1674,20 +1674,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-03-17T12:04:36+00:00"
+            "time": "2023-05-16T13:18:04+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "7.5.x-dev",
+            "version": "7.6.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "255d7157b463ee2d9b3cbf891eda2691baa43076"
+                "reference": "8444a2bacf1960bc6a2b62ed86b8e72e11eebe51"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/255d7157b463ee2d9b3cbf891eda2691baa43076",
-                "reference": "255d7157b463ee2d9b3cbf891eda2691baa43076",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/8444a2bacf1960bc6a2b62ed86b8e72e11eebe51",
+                "reference": "8444a2bacf1960bc6a2b62ed86b8e72e11eebe51",
                 "shasum": ""
             },
             "require": {
@@ -1784,7 +1784,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
-                "source": "https://github.com/guzzle/guzzle/tree/7.5"
+                "source": "https://github.com/guzzle/guzzle/tree/7.6.1"
             },
             "funding": [
                 {
@@ -1800,7 +1800,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-04-18T08:37:42+00:00"
+            "time": "2023-05-15T20:43:01+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -4255,12 +4255,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/framework-bundle.git",
-                "reference": "6cb4f6aed4bd7fbf7b2ee74c231184a07f3d00c1"
+                "reference": "afcdaa3da94c6e20231c742aea77c6022f9fedd9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/framework-bundle/zipball/6cb4f6aed4bd7fbf7b2ee74c231184a07f3d00c1",
-                "reference": "6cb4f6aed4bd7fbf7b2ee74c231184a07f3d00c1",
+                "url": "https://api.github.com/repos/symfony/framework-bundle/zipball/afcdaa3da94c6e20231c742aea77c6022f9fedd9",
+                "reference": "afcdaa3da94c6e20231c742aea77c6022f9fedd9",
                 "shasum": ""
             },
             "require": {
@@ -4398,7 +4398,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-03-31T08:25:44+00:00"
+            "time": "2023-05-14T19:54:19+00:00"
         },
         {
             "name": "symfony/http-client",
@@ -4497,12 +4497,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client-contracts.git",
-                "reference": "e409355955c35bc64af520f9853f191e6621d013"
+                "reference": "44960121df375520a6fe285e8bef06f7469bbeb2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client-contracts/zipball/e409355955c35bc64af520f9853f191e6621d013",
-                "reference": "e409355955c35bc64af520f9853f191e6621d013",
+                "url": "https://api.github.com/repos/symfony/http-client-contracts/zipball/44960121df375520a6fe285e8bef06f7469bbeb2",
+                "reference": "44960121df375520a6fe285e8bef06f7469bbeb2",
                 "shasum": ""
             },
             "require": {
@@ -4567,7 +4567,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-01-24T14:02:46+00:00"
+            "time": "2023-04-14T10:15:01+00:00"
         },
         {
             "name": "symfony/http-foundation",
@@ -4651,12 +4651,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-kernel.git",
-                "reference": "d6e45e4ed778f81d16f341c0e6e8b1f8f7ae91e5"
+                "reference": "c711afd602c12f26ae852246d990fb998794758e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/d6e45e4ed778f81d16f341c0e6e8b1f8f7ae91e5",
-                "reference": "d6e45e4ed778f81d16f341c0e6e8b1f8f7ae91e5",
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/c711afd602c12f26ae852246d990fb998794758e",
+                "reference": "c711afd602c12f26ae852246d990fb998794758e",
                 "shasum": ""
             },
             "require": {
@@ -4755,7 +4755,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-05-05T13:22:42+00:00"
+            "time": "2023-05-13T09:29:41+00:00"
         },
         {
             "name": "symfony/intl",
@@ -5976,12 +5976,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/property-info.git",
-                "reference": "c1980741a8a6216b35aa77083379720661bb147c"
+                "reference": "d43b85b00699b4484964c297575b5c6f9dc5f6e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/property-info/zipball/c1980741a8a6216b35aa77083379720661bb147c",
-                "reference": "c1980741a8a6216b35aa77083379720661bb147c",
+                "url": "https://api.github.com/repos/symfony/property-info/zipball/d43b85b00699b4484964c297575b5c6f9dc5f6e1",
+                "reference": "d43b85b00699b4484964c297575b5c6f9dc5f6e1",
                 "shasum": ""
             },
             "require": {
@@ -6059,7 +6059,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-05-05T11:11:42+00:00"
+            "time": "2023-05-15T20:11:03+00:00"
         },
         {
             "name": "symfony/redis-messenger",
@@ -6747,12 +6747,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/service-contracts.git",
-                "reference": "1a3d2ddc2c06df23e8c13ea99148bae2b8cebd35"
+                "reference": "a2329596ddc8fd568900e3fc76cba42489ecc7f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/service-contracts/zipball/1a3d2ddc2c06df23e8c13ea99148bae2b8cebd35",
-                "reference": "1a3d2ddc2c06df23e8c13ea99148bae2b8cebd35",
+                "url": "https://api.github.com/repos/symfony/service-contracts/zipball/a2329596ddc8fd568900e3fc76cba42489ecc7f3",
+                "reference": "a2329596ddc8fd568900e3fc76cba42489ecc7f3",
                 "shasum": ""
             },
             "require": {
@@ -6822,7 +6822,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-02-21T11:06:24+00:00"
+            "time": "2023-04-21T15:04:16+00:00"
         },
         {
             "name": "symfony/stopwatch",
