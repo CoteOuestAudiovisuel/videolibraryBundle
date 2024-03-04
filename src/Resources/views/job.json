@@ -11,10 +11,45 @@
               "CodecSettings": {
                 "Codec": "H_264",
                 "H264Settings": {
-                  "RateControlMode": "VBR",
+                  "RateControlMode": "QVBR",
                   "QualityTuningLevel": "SINGLE_PASS",
-                  "Bitrate": 357840,
-                  "MaxBitrate": 382889
+                  "SceneChangeDetect": "TRANSITION_DETECTION",
+                  "MaxBitrate": 1000000
+                }
+              },
+              "Width": 256,
+              "Height": 144
+            },
+            "AudioDescriptions": [
+              {
+                "CodecSettings": {
+                  "Codec": "AAC",
+                  "AacSettings": {
+                    "Bitrate": 96000,
+                    "CodingMode": "CODING_MODE_2_0",
+                    "SampleRate": 48000
+                  }
+                }
+              }
+            ],
+            "OutputSettings": {
+              "HlsSettings": {}
+            },
+            "ContainerSettings": {
+              "Container": "M3U8",
+              "M3u8Settings": {}
+            },
+            "NameModifier": "_144p"
+          },
+          {
+            "VideoDescription": {
+              "CodecSettings": {
+                "Codec": "H_264",
+                "H264Settings": {
+                  "RateControlMode": "QVBR",
+                  "QualityTuningLevel": "SINGLE_PASS",
+                  "SceneChangeDetect": "TRANSITION_DETECTION",
+                  "MaxBitrate": 1000000
                 }
               },
               "Width": 426,
@@ -25,7 +60,7 @@
                 "CodecSettings": {
                   "Codec": "AAC",
                   "AacSettings": {
-                    "Bitrate": 64000,
+                    "Bitrate": 96000,
                     "CodingMode": "CODING_MODE_2_0",
                     "SampleRate": 48000
                   }
@@ -46,10 +81,10 @@
               "CodecSettings": {
                 "Codec": "H_264",
                 "H264Settings": {
-                  "RateControlMode": "VBR",
+                  "RateControlMode": "QVBR",
                   "QualityTuningLevel": "SINGLE_PASS",
-                  "Bitrate": 800000,
-                  "MaxBitrate": 856000
+                  "SceneChangeDetect": "TRANSITION_DETECTION",
+                  "MaxBitrate": 1000000
                 }
               },
               "Width": 640,
@@ -81,10 +116,10 @@
               "CodecSettings": {
                 "Codec": "H_264",
                 "H264Settings": {
-                  "RateControlMode": "VBR",
+                  "RateControlMode": "QVBR",
                   "QualityTuningLevel": "SINGLE_PASS",
-                  "Bitrate": 1400000,
-                  "MaxBitrate": 1498000
+                  "SceneChangeDetect": "TRANSITION_DETECTION",
+                  "MaxBitrate": 1000000
                 }
               },
               "Width": 842,
@@ -95,7 +130,7 @@
                 "CodecSettings": {
                   "Codec": "AAC",
                   "AacSettings": {
-                    "Bitrate": 128000,
+                    "Bitrate": 96000,
                     "CodingMode": "CODING_MODE_2_0",
                     "SampleRate": 48000
                   }
@@ -116,10 +151,10 @@
               "CodecSettings": {
                 "Codec": "H_264",
                 "H264Settings": {
-                  "RateControlMode": "VBR",
+                  "RateControlMode": "QVBR",
                   "QualityTuningLevel": "SINGLE_PASS",
-                  "Bitrate": 2800000,
-                  "MaxBitrate": 2996000
+                  "SceneChangeDetect": "TRANSITION_DETECTION",
+                  "MaxBitrate": 1000000
                 }
               },
               "Width": 1280,
@@ -130,7 +165,7 @@
                 "CodecSettings": {
                   "Codec": "AAC",
                   "AacSettings": {
-                    "Bitrate": 128000,
+                    "Bitrate": 96000,
                     "CodingMode": "CODING_MODE_2_0",
                     "SampleRate": 48000
                   }
@@ -151,10 +186,10 @@
               "CodecSettings": {
                 "Codec": "H_264",
                 "H264Settings": {
-                  "RateControlMode": "VBR",
+                  "RateControlMode": "QVBR",
                   "QualityTuningLevel": "SINGLE_PASS",
-                  "Bitrate": 5000000,
-                  "MaxBitrate": 5350000
+                  "SceneChangeDetect": "TRANSITION_DETECTION",
+                  "MaxBitrate": 1500000
                 }
               },
               "Width": 1920,
@@ -165,7 +200,7 @@
                 "CodecSettings": {
                   "Codec": "AAC",
                   "AacSettings": {
-                    "Bitrate": 192000,
+                    "Bitrate": 96000,
                     "CodingMode": "CODING_MODE_2_0",
                     "SampleRate": 48000
                   }
@@ -232,7 +267,7 @@
                 "FrameCaptureSettings": {
                   "Quality": 80,
                   "FramerateNumerator": 1,
-                  "FramerateDenominator": __SCREENSHOT_TC__,
+                  "FramerateDenominator": "__SCREENSHOT_TC__",
                   "MaxCaptures": 20
                 }
               },
