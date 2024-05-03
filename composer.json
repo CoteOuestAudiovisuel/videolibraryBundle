@@ -3,8 +3,8 @@
     "description": "gestion des videos aws, upload, mediaconvert, s3",
     "type": "symfony-bundle",
     "version": "v1.0.12",
-    "minimum-stability": "stable",
-    "prefer-stable": true,
+    "minimum-stability": "dev",
+    "prefer-stable": false,
     "require": {
         "php": ">=7.4",
         "symfony/framework-bundle": "^5.4",
