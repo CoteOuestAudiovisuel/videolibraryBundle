@@ -2,7 +2,7 @@
     "name": "coa/videolibrary-bundle",
     "description": "gestion des videos aws, upload, mediaconvert, s3",
     "type": "symfony-bundle",
-    "version": "v1.0.10",
+    "version": "v1.0.11",
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
@@ -22,7 +22,7 @@
         "ext-json": "*",
         "ext-openssl": "*",
         "symfony/http-client": "5.4.*",
-        "symfony/form": "5.4.*"
+        "symfony/form": "5.4.x-dev"
     },
     "license": "proprietary",
     "autoload": {
