@@ -10,7 +10,7 @@
         "symfony/framework-bundle": "^5.4",
         "symfony/asset": "5.4.*",
         "sensio/framework-extra-bundle": "^6.2",
-        "aws/aws-sdk-php": "^3.209",
+        "aws/aws-sdk-php": "^3.288.1",
         "doctrine/annotations": "^1.0",
         "doctrine/doctrine-bundle": "^2.4",
         "doctrine/doctrine-migrations-bundle": "^3.1",
