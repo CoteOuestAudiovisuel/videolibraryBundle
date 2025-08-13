@@ -65,6 +65,16 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue("media")
                 ->end()
 
+                ->scalarNode('aws_cdn_default')
+                    ->info("le CDN par defaut à utiliser pour AWS")
+                    ->defaultNull()
+                ->end()
+
+                ->scalarNode('gcp_cdn_default')
+                    ->info("le CDN par defaut à utiliser pour GCP")
+                    ->defaultNull()
+                ->end()
+
                 ->scalarNode('token')
                     ->info("le token identifiant ce client dans la constellation videolibrary")
                     ->defaultValue("vRsJ5P-y_8Qd2am")

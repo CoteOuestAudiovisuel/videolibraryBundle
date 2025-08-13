@@ -14,6 +14,8 @@ parameters:
         keys_route: '/keys'
         hls_key_baseurl: ~
         video_entity: ~
+        aws_cdn_default: ~
+        gcp_cdn_default: ~
 
 
 services:

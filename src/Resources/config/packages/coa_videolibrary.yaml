@@ -9,6 +9,8 @@ coa_videolibrary:
   hls_key_baseurl: ~
   video_entity: ~
   prefix: ~
+  aws_cdn_default: ~
+  gcp_cdn_default: ~
   constellation:
     name: ~
     id: ~

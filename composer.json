@@ -2,7 +2,7 @@
     "name": "coa/videolibrary-bundle",
     "description": "gestion des videos aws, upload, mediaconvert, s3",
     "type": "symfony-bundle",
-    "version": "v1.0.9",
+    "version": "v1.1.1",
     "minimum-stability": "dev",
     "prefer-stable": false,
     "require": {
@@ -10,7 +10,7 @@
         "symfony/framework-bundle": "^5.4",
         "symfony/asset": "5.4.*",
         "sensio/framework-extra-bundle": "^6.2",
-        "aws/aws-sdk-php": "^3.209",
+        "aws/aws-sdk-php": "^3.337.3",
         "doctrine/annotations": "^1.0",
         "doctrine/doctrine-bundle": "^2.4",
         "doctrine/doctrine-migrations-bundle": "^3.1",
@@ -22,7 +22,7 @@
         "ext-json": "*",
         "ext-openssl": "*",
         "symfony/http-client": "5.4.*",
-        "symfony/form": "5.4.x-dev"
+        "symfony/form": "^5.4"
     },
     "license": "proprietary",
     "autoload": {
